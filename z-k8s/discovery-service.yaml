@@ -31,6 +31,7 @@ spec:
   selector:
     app: discovery-service
   ports:
-    - port: 8761
-      targetPort: 8761
-  type: ClusterIP
+    - port: 8761        # 클러스터 내부에서 discovery-service:8761 로 접근
+      targetPort: 8761  # 컨테이너 포트
+      nodePort: 30061   # EC2 외부 접근 (http://<EC2_IP>:30061)
+  type: NodePort

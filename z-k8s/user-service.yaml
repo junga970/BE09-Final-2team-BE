@@ -19,16 +19,3 @@ spec:
           envFrom:
             - secretRef:
                 name: app-secret
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: user-service
-  namespace: momnect
-spec:
-  selector:
-    app: user-service
-  clusterIP: None   # Headless (Eureka 의존)
-  ports:
-    - port: 80
-      targetPort: 80   # placeholder

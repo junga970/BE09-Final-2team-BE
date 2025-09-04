@@ -18,7 +18,7 @@ pipeline {
                 script {
                     // dev 브랜치 기준 변경된 파일 확인
                     def changedFiles = sh(
-                        script: "git diff --name-only origin/main...origin/dev",
+                        script: "git diff --name-only origin/dev",
                         returnStdout: true
                     ).trim().split("\n")
 

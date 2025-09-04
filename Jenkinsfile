@@ -32,26 +32,20 @@ pipeline {
             steps {
                 script {
                     def services = [
-                        "chat-service",
-                        "discovery-service",
-                        "file-service",
-                        "gateway-service",
-                        "post-service",
-                        "product-service",
-                        "review-service",
-                        "user-service",
-                        "websocket-service"
+                        "chat-service", "discovery-service", "file-service",
+                        "gateway-service", "post-service", "product-service",
+                        "review-service", "user-service", "websocket-service"
                     ]
 
-                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_PASSWORD') {
-                        for (service in services) {
-                            dir(service) {
-                                sh """
-                                echo "🚀 Building Docker image for ${service}"
-                                docker build -t ${REGISTRY}/${service}:dev-${env.BUILD_NUMBER} .
-                                docker push ${REGISTRY}/${service}:dev-${env.BUILD_NUMBER}
-                                """
-                            }
+                    sh 'echo $DOCKERHUB_PASSWORD | docker login -u junga970 --password-stdin'
+
+                    for (service in services) {
+                        dir(service) {
+                            sh """
+                            echo "🚀 Building Docker image for ${service}"
+                            docker build -t ${REGISTRY}/${service}:dev-${env.BUILD_NUMBER} .
+                            docker push ${REGISTRY}/${service}:dev-${env.BUILD_NUMBER}
+                            """
                         }
                     }
                 }

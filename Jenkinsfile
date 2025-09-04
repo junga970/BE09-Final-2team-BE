@@ -29,7 +29,7 @@ pipeline {
                         "websocket-service"
                     ]
 
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_PASSWORD') {
                         for (service in services) {
                             dir(service) {
                                 sh """

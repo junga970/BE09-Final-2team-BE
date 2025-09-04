@@ -6,8 +6,22 @@ pipeline {
     environment {
         REGISTRY = "junga970"       // Docker Hub 계정명
         NAMESPACE = "momnect"       // 쿠버네티스 네임스페이스
+        PATH = "/usr/local/bin:/usr/bin:/bin"
     }
+
     stages {
+        stage('Check Docker') {
+            steps {
+                sh '''
+                echo "Who am I?"
+                whoami
+                echo "Docker path:"
+                which docker || echo "docker not in PATH"
+                echo "Docker version:"
+                docker --version || echo "docker command failed"
+                '''
+            }
+        }
         stage('Checkout') {
             steps {
                 checkout scm

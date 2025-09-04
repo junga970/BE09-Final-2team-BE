@@ -4,7 +4,7 @@ pipeline {
         githubPush()   // GitHub Webhook 트리거
     }
     environment {
-        REGISTRY = "docker.io/junga970"  // Docker Hub 계정
+        REGISTRY = "junga970"  // Docker Hub 계정
     }
     stages {
         stage('Checkout') {

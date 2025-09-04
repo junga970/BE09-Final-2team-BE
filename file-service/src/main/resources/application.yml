@@ -25,6 +25,20 @@ spring:
       hibernate:
         format_sql: true
 
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+
+ftp:
+  file-server-url: ${FTP_SERVER_URL}
+  server: ${FTP_SERVER}
+  port: 21           # 포트
+  user: ${FTP_USER}
+  password: ${FTP_PASS}
+  path: ${FTP_PATH}
+
 # swagger
 springdoc:
   packages-to-scan: com.momnect.fileservice

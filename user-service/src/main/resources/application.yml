@@ -35,6 +35,15 @@ spring:
         url: http://localhost:8000/api/v1/product-service
       review-service:
         url: http://localhost:8000/api/v1/review-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USER:root}
+    password: ${DB_PASS:root}
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 604800000 # 추후에 바꾸기 -> 1800000
+  refresh-expiration: 604800000
 
 # swagger
 springdoc:
@@ -44,4 +53,4 @@ springdoc:
 
 # 파일 서비스 URL 설정
 ftp:
-  file-server-url: http://dev.macacolabs.site:8008
+  file-server-url: ${FTP_SERVER_URL}

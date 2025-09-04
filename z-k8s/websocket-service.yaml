@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket-service
+  namespace: momnect
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: websocket-service
+  template:
+    metadata:
+      labels:
+        app: websocket-service
+    spec:
+      containers:
+        - name: websocket-service
+          image: junga970/websocket-service:dev-1
+          ports:
+            - containerPort: 8085   # Spring Boot 포트 고정
+          envFrom:
+            - secretRef:
+                name: app-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: websocket-service
+  namespace: momnect
+spec:
+  selector:
+    app: websocket-service
+  ports:
+    - port: 8085
+      targetPort: 8085
+  type: ClusterIP   # 내부 통신용 (게이트웨이를 통해 외부 접근)

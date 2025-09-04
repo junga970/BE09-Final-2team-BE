@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review-service
+  namespace: momnect
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: review-service
+  template:
+    metadata:
+      labels:
+        app: review-service
+    spec:
+      containers:
+        - name: review-service
+          image: junga970/review-service:dev-1
+          envFrom:
+            - secretRef:
+                name: app-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: review-service
+  namespace: momnect
+spec:
+  selector:
+    app: review-service
+  clusterIP: None   # Headless (Eureka 의존)
+  ports:
+    - port: 80
+      targetPort: 80   # placeholder

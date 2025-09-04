@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-service
+  namespace: momnect
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-service
+  template:
+    metadata:
+      labels:
+        app: file-service
+    spec:
+      containers:
+        - name: file-service
+          image: junga970/file-service:dev-1
+          envFrom:
+            - secretRef:
+                name: app-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: file-service
+  namespace: momnect
+spec:
+  selector:
+    app: file-service
+  clusterIP: None   # Headless (Eureka 의존)
+  ports:
+    - port: 80
+      targetPort: 80   # placeholder

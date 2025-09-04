@@ -4,7 +4,8 @@ pipeline {
         githubPush()
     }
     environment {
-        REGISTRY = "junga970"   // Docker Hub 계정명
+        REGISTRY = "junga970"       // Docker Hub 계정명
+        NAMESPACE = "momnect"       // 쿠버네티스 네임스페이스
     }
     stages {
         stage('Checkout') {
@@ -16,7 +17,6 @@ pipeline {
         stage('Build & Push Docker Images') {
             steps {
                 script {
-                    // 전체 서비스 리스트
                     def services = [
                         "chat-service",
                         "discovery-service",
@@ -33,7 +33,7 @@ pipeline {
                         for (service in services) {
                             dir(service) {
                                 sh """
-                                echo "Building Docker image for ${service}"
+                                echo "🚀 Building Docker image for ${service}"
                                 docker build -t ${REGISTRY}/${service}:dev-${env.BUILD_NUMBER} .
                                 docker push ${REGISTRY}/${service}:dev-${env.BUILD_NUMBER}
                                 """
@@ -61,8 +61,8 @@ pipeline {
 
                     for (service in services) {
                         sh """
-                        echo "Deploying ${service} to Kubernetes..."
-                        kubectl set image deployment/${service} ${service}=${REGISTRY}/${service}:dev-${env.BUILD_NUMBER} -n momnect
+                        echo "🚀 Deploying ${service} to Kubernetes..."
+                        kubectl set image deployment/${service} ${service}=${REGISTRY}/${service}:dev-${env.BUILD_NUMBER} -n ${NAMESPACE}
                         """
                     }
                 }

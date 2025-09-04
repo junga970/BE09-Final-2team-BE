@@ -28,6 +28,15 @@ spring:
   elasticsearch:
     uris: http://localhost:9200
 
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USER:root}
+    password: ${DB_PASS:root}
+
+ftp:
+  base-url: ${FTP_SERVER_URL}
+
 # swagger
 springdoc:
   packages-to-scan: com.momnect.productservice

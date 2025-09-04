@@ -29,6 +29,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USER:root}
+    password: ${DB_PASS:root}
 
 springdoc:
   packages-to-scan: com.momnect.postservice

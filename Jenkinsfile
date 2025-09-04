@@ -37,15 +37,19 @@ pipeline {
                         "review-service", "user-service", "websocket-service"
                     ]
 
-                    sh 'echo $DOCKERHUB_PASSWORD | docker login -u junga970 --password-stdin'
+                    withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh """
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        """
 
-                    for (service in services) {
-                        dir(service) {
-                            sh """
-                            echo "🚀 Building Docker image for ${service}"
-                            docker build -t ${REGISTRY}/${service}:dev-${env.BUILD_NUMBER} .
-                            docker push ${REGISTRY}/${service}:dev-${env.BUILD_NUMBER}
-                            """
+                        for (service in services) {
+                            dir(service) {
+                                sh """
+                                echo "🚀 Building Docker image for ${service}"
+                                docker build -t ${REGISTRY}/${service}:dev-${env.BUILD_NUMBER} .
+                                docker push ${REGISTRY}/${service}:dev-${env.BUILD_NUMBER}
+                                """
+                            }
                         }
                     }
                 }

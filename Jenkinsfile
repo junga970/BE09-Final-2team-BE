@@ -1,8 +1,12 @@
 pipeline {
     agent any
+    triggers {
+        githubPush()
+    }
     environment {
         REGISTRY = "junga970"
         NAMESPACE = "momnect"
+        PATH = "/usr/local/bin:/usr/bin:/bin"
     }
 
     stages {
@@ -12,15 +16,47 @@ pipeline {
             }
         }
 
-        stage('Deploy Initial Resources') {
+        stage('Build & Push Docker Images') {
             steps {
                 script {
-                    withCredentials([file(credentialsId: 'KUBECONFIG_EC2', variable: 'KUBECONFIG')]) {
-                        // 네임스페이스 없으면 생성
-                        sh "kubectl --kubeconfig=$KUBECONFIG get ns ${NAMESPACE} || kubectl --kubeconfig=$KUBECONFIG create ns ${NAMESPACE}"
+                    def services = [
+                        "chat-service", "discovery-service", "file-service",
+                        "gateway-service", "post-service", "product-service",
+                        "review-service", "user-service", "websocket-service"
+                    ]
 
-                        // 최초 1회만 전체 YAML 반영
-                        sh "kubectl --kubeconfig=$KUBECONFIG apply -f z-k8s/ -n ${NAMESPACE}"
+                    withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh "echo \"$DOCKER_PASS\" | docker login -u \"$DOCKER_USER\" --password-stdin"
+
+                        for (service in services) {
+                            dir(service) {
+                                sh """
+                                echo "🚀 Building Docker image for ${service}"
+                                docker build -t ${REGISTRY}/${service}:dev-${env.BUILD_NUMBER} .
+                                docker push ${REGISTRY}/${service}:dev-${env.BUILD_NUMBER}
+                                """
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Rolling Update Deployments') {
+            steps {
+                script {
+                    def services = [
+                        "chat-service", "discovery-service", "file-service",
+                        "gateway-service", "post-service", "product-service",
+                        "review-service", "user-service", "websocket-service"
+                    ]
+
+                    withCredentials([file(credentialsId: 'KUBECONFIG_EC2', variable: 'KUBECONFIG')]) {
+                        for (service in services) {
+                            sh """
+                            kubectl --kubeconfig=$KUBECONFIG set image deployment/${service} ${service}=${REGISTRY}/${service}:dev-${env.BUILD_NUMBER} -n ${NAMESPACE}
+                            """
+                        }
                     }
                 }
             }

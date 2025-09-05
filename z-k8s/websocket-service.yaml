@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: websocket-service
-          image: junga970/websocket-service:dev-1
+          image: junga970/websocket-service:latest
           ports:
             - containerPort: 8085
           envFrom:

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: file-service
-          image: junga970/file-service:dev-1
+          image: junga970/file-service:latest
           envFrom:
             - secretRef:
                 name: app-secret

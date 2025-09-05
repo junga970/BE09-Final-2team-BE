@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: post-service
-          image: junga970/post-service:dev-1
+          image: junga970/post-service:latest
           envFrom:
             - secretRef:
                 name: app-secret

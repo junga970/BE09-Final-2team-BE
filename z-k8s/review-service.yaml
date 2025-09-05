@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: review-service
-          image: junga970/review-service:dev-1
+          image: junga970/review-service:latest
           envFrom:
             - secretRef:
                 name: app-secret

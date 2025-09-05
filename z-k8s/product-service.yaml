@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: product-service
-          image: junga970/product-service:dev-1
+          image: junga970/product-service:latest
           envFrom:
             - secretRef:
                 name: app-secret

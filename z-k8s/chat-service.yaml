@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: chat-service
-          image: junga970/chat-service:dev-1
+          image: junga970/chat-service:latest
           envFrom:
             - secretRef:
                 name: app-secret
